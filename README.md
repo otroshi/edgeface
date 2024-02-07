@@ -26,7 +26,7 @@ which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient F
 $ pip install -r requirements.txt
 ```
 
-## Inferece
+## Inference
 The following code shows how to use the model for inference:
 ```python
 import torch
