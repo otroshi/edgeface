@@ -56,8 +56,8 @@ embedding = model(transformed_input)
 
 
 ## Pre-trained models
-- EdgeFace-s (gamma=0.5): available in [`checkpoints/edgeface_s_gamma_05.pth`](checkpoints/edgeface_s_gamma_05.pth)
-- EdgeFace-xs (gamma=0.6): available in [`checkpoints/edgeface_xs_gamma_06.pth`](checkpoints/edgeface_xs_gamma_06.pth)
+- EdgeFace-s (gamma=0.5): available in [`checkpoints/edgeface_s_gamma_05.pt`](checkpoints/edgeface_s_gamma_05.pt)
+- EdgeFace-xs (gamma=0.6): available in [`checkpoints/edgeface_xs_gamma_06.pt`](checkpoints/edgeface_xs_gamma_06.pt)
 
 
 ## Performance
