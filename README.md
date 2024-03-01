@@ -37,8 +37,8 @@ from backbones import get_model
 # load model
 model_name="edgeface_s_gamma_05" # or edgeface_xs_gamma_06
 model=get_model(model_name)
-checkpoint_path='path_to_checkpint'
-model.load_state_dict(torch.load(checkpoint_path)['state_dict']).eval()
+checkpoint_path=f'checkpoints/{arch}.pt'
+model.load_state_dict(torch.load(checkpoint_path, map_location='cpu')).eval()
 
 transform = transforms.Compose([
             transforms.ToTensor(),
