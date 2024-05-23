@@ -14,7 +14,7 @@
 
 
 This repository contain inference code and pretrained models to use [**EdgeFace: Efficient Face Recognition Model for Edge Devices**](https://ieeexplore.ieee.org/abstract/document/10388036/), 
-which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient Face Recognition Competition"](https://arxiv.org/abs/2308.04168v2) organised for the IEEE/IAPR International Journal of Central Banking (IJCB) 2023*. For the complete source code of training and evaluation, please check the [official repository](https://gitlab.idiap.ch/bob/bob.paper.tbiom2023_edgeface).
+which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient Face Recognition Competition"](https://arxiv.org/abs/2308.04168) organised at the IEEE International Joint Conference on Biometrics (IJCB) 2023*. For the complete source code of training and evaluation, please check the [official repository](https://gitlab.idiap.ch/bob/bob.paper.tbiom2023_edgeface).
 
 
 ![EdgeFace](assets/edgeface.png)
