@@ -60,6 +60,29 @@ embedding = model(transformed_input)
 - EdgeFace-xs (gamma=0.6): available in [`checkpoints/edgeface_xs_gamma_06.pt`](checkpoints/edgeface_xs_gamma_06.pt)
 
 
+
+## Using EdgeFace Models via `torch.hub`
+
+### Available Models
+
+- `edgeface_base`
+- `edgeface_xs_gamma_06`
+- `edgeface_xs_q`
+- `edgeface_xxs`
+- `edgeface_xxs_q`
+- `edgeface_s_gamma_05`
+
+### Usage
+
+You can load the models using `torch.hub` as follows:
+
+```python
+import torch
+# Load a model
+model = torch.hub.load('otroshi/edgeface', 'edgeface_xs_gamma_06', source='github', pretrained=True)
+model.eval()
+
+
 ## Performance
 The performance of each model is reported in Table 2 of the [paper](https://arxiv.org/pdf/2307.01838v2.pdf):
 
