@@ -81,7 +81,7 @@ import torch
 # Load a model
 model = torch.hub.load('otroshi/edgeface', 'edgeface_xs_gamma_06', source='github', pretrained=True)
 model.eval()
-
+```
 
 ## Performance
 The performance of each model is reported in Table 2 of the [paper](https://arxiv.org/pdf/2307.01838v2.pdf):
