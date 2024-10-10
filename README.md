@@ -66,11 +66,12 @@ embedding = model(transformed_input)
 ### Available Models
 
 - `edgeface_base`
-- `edgeface_xs_gamma_06`
+- `edgeface_s_gamma_05`
 - `edgeface_xs_q`
+- `edgeface_xs_gamma_06`
 - `edgeface_xxs`
 - `edgeface_xxs_q`
-- `edgeface_s_gamma_05`
+
 
 ### Usage
 
