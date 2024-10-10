@@ -79,7 +79,6 @@ You can load the models using `torch.hub` as follows:
 
 ```python
 import torch
-# Load a model
 model = torch.hub.load('anjith2006/edgeface', 'edgeface_xs_gamma_06', source='github', pretrained=True)
 model.eval()
 ```
