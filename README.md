@@ -78,6 +78,7 @@ The performance of each model is reported in Table 2 of the [paper](https://arxi
 - `edgeface_xxs`
 - `edgeface_xxs_q`
 
+**NOTE:** Models with `_q` are quantised and require less storage.
 
 ### Loading EdgeFace Models with `torch.hub`
 
