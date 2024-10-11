@@ -61,9 +61,15 @@ embedding = model(transformed_input)
 
 
 
+## Performance
+The performance of each model is reported in Table 2 of the [paper](https://arxiv.org/pdf/2307.01838v2.pdf):
+
+![performance](assets/benchmark.png)
+
+
 ## Using EdgeFace Models via `torch.hub`
 
-### Available Models
+### Available Models on `torch.hub`
 
 - `edgeface_base`
 - `edgeface_s_gamma_05`
@@ -73,20 +79,15 @@ embedding = model(transformed_input)
 - `edgeface_xxs_q`
 
 
-### Usage
+### Loading EdgeFace Models with `torch.hub`
 
 You can load the models using `torch.hub` as follows:
 
 ```python
 import torch
-model = torch.hub.load('anjith2006/edgeface', 'edgeface_xs_gamma_06', source='github', pretrained=True)
+model = torch.hub.load('otroshi/edgeface', 'edgeface_xs_gamma_06', source='github', pretrained=True)
 model.eval()
 ```
-
-## Performance
-The performance of each model is reported in Table 2 of the [paper](https://arxiv.org/pdf/2307.01838v2.pdf):
-
-![performance](assets/benchmark.png)
 
 
 ## Reference
