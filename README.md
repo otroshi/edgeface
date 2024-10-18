@@ -88,7 +88,7 @@ model = torch.hub.load('otroshi/edgeface', 'edgeface_xs_gamma_06', source='githu
 model.eval()
 ```
 
-### Performance benchmarks of different variants
+### Performance benchmarks of different variants of EdgeFace
 
 | Model               | MPARAMS| MFLOPs |    LFW(%)    |    CALFW(%)  |   CPLFW(%)   |   CFP-FP(%)  |   AgeDB30(%) |
 |:--------------------|-------:|-------:|:-------------|:-------------|:-------------|:-------------|:-------------|
