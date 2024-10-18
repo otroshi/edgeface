@@ -65,7 +65,7 @@ The performance of each model is reported in Table 2 of the [paper](https://arxi
 ![performance](assets/benchmark.png)
 
 
-## Using EdgeFace Models via `torch.hub`
+## :rocket: New! Using EdgeFace Models via `torch.hub`
 
 ### Available Models on `torch.hub`
 
