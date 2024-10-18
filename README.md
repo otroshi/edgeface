@@ -19,8 +19,6 @@ which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient F
 
 ![EdgeFace](assets/edgeface.png)
 
-
-
 ## Installation
 ```sh
 $ pip install -r requirements.txt
@@ -90,6 +88,9 @@ model = torch.hub.load('otroshi/edgeface', 'edgeface_xs_gamma_06', source='githu
 model.eval()
 ```
 
+### Performance benchmarks of different variants
+
+![EdgeFace](assets/edgeperformance.png)
 
 ## Reference
 If you use this repository, please cite the following paper, which is [published](https://ieeexplore.ieee.org/abstract/document/10388036/) in the IEEE Transactions on Biometrics, Behavior, and Identity Science (IEEE T-BIOM). The PDF version of the paper is available as [pre-print on arxiv](https://arxiv.org/pdf/2307.01838v2.pdf). The complete source code for reproducing all experiments in the paper (including training and evaluation) is also publicly available in the [official repository](https://gitlab.idiap.ch/bob/bob.paper.tbiom2023_edgeface).
