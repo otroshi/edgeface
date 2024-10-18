@@ -19,8 +19,6 @@ which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient F
 
 ![EdgeFace](assets/edgeface.png)
 
-
-
 ## Installation
 ```sh
 $ pip install -r requirements.txt
@@ -67,7 +65,7 @@ The performance of each model is reported in Table 2 of the [paper](https://arxi
 ![performance](assets/benchmark.png)
 
 
-## Using EdgeFace Models via `torch.hub`
+## :rocket: New! Using EdgeFace Models via `torch.hub`
 
 ### Available Models on `torch.hub`
 
@@ -90,6 +88,14 @@ model = torch.hub.load('otroshi/edgeface', 'edgeface_xs_gamma_06', source='githu
 model.eval()
 ```
 
+### Performance benchmarks of different variants
+
+| Model               | MPARAMS| MFLOPs |    LFW(%)    |    CALFW(%)  |   CPLFW(%)   |   CFP-FP(%)  |   AgeDB30(%) |
+|:--------------------|-------:|-------:|:-------------|:-------------|:-------------|:-------------|:-------------|
+| edgeface_base       |  18.23 |1398.83 | 99.83 ± 0.24 | 96.07 ± 1.03 | 93.75 ± 1.16 | 97.01 ± 0.94 | 97.60 ± 0.70 |
+| edgeface_s_gamma_05 |   3.65 | 306.12 | 99.78 ± 0.27 | 95.55 ± 1.05 | 92.48 ± 1.42 | 95.74 ± 1.09 | 97.03 ± 0.85 |
+| edgeface_xs_gamma_06|   1.77 | 154.00 | 99.73 ± 0.35 | 95.28 ± 1.37 | 91.58 ± 1.42 | 94.71 ± 1.07 | 96.08 ± 0.95 |
+| edgeface_xxs        |   1.24 |  94.72 | 99.57 ± 0.33 | 94.83 ± 0.98 | 90.27 ± 0.93 | 93.63 ± 0.99 | 94.92 ± 1.15 |
 
 ## Reference
 If you use this repository, please cite the following paper, which is [published](https://ieeexplore.ieee.org/abstract/document/10388036/) in the IEEE Transactions on Biometrics, Behavior, and Identity Science (IEEE T-BIOM). The PDF version of the paper is available as [pre-print on arxiv](https://arxiv.org/pdf/2307.01838v2.pdf). The complete source code for reproducing all experiments in the paper (including training and evaluation) is also publicly available in the [official repository](https://gitlab.idiap.ch/bob/bob.paper.tbiom2023_edgeface).
