@@ -1,5 +1,13 @@
-pytorch
+torch
 torchvision
 timm
 mxnet
 opencv-python
+Pillow
+numpy
+scikit-learn
+mxnet
+
+# Web API
+fastapi
+uvicorn[standard]
