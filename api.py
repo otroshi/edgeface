@@ -9,7 +9,7 @@ import uvicorn
 import sys
 
 app = FastAPI()
-verifier = Verifier(model_name="edgeface_s_gamma_05 ")
+verifier = Verifier(model_name="edgeface_s_gamma_05")
 
 def read_image_as_numpy(file: UploadFile) -> np.ndarray:
     try:

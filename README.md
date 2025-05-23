@@ -121,6 +121,11 @@ Returns JSON with:
 - `threshold`: Threshold for matching
 - `match`: Boolean indicating if faces match
 
+You can test the API endpoints through the interactive Swagger UI documentation at:
+```
+http://127.0.0.1:8000/docs
+```
+
 ## Reference
 If you use this repository, please cite the following paper, which is [published](https://ieeexplore.ieee.org/abstract/document/10388036/) in the IEEE Transactions on Biometrics, Behavior, and Identity Science (IEEE T-BIOM). The PDF version of the paper is available as [pre-print on arxiv](https://arxiv.org/pdf/2307.01838v2.pdf). The complete source code for reproducing all experiments in the paper (including training and evaluation) is also publicly available in the [official repository](https://gitlab.idiap.ch/bob/bob.paper.tbiom2023_edgeface).
 
