@@ -34,11 +34,13 @@ from torchvision import transforms
 from face_alignment import align
 from backbones import get_model
 
+batch_size = 1
 # load model
 model_name="edgeface_s_gamma_05" # or edgeface_xs_gamma_06
 model=get_model(model_name)
-checkpoint_path=f'checkpoints/{arch}.pt'
-model.load_state_dict(torch.load(checkpoint_path, map_location='cpu')).eval()
+checkpoint_path=f'checkpoints/{model_name}.pt'
+model.load_state_dict(torch.load(checkpoint_path, map_location='cpu')) # Load state dict
+model.eval() # Call eval() on the model object
 
 transform = transforms.Compose([
             transforms.ToTensor(),
@@ -48,7 +50,7 @@ transform = transforms.Compose([
 path = 'path_to_face_image'
 aligned = align.get_aligned_face(path) # align face
 transformed_input = transform(aligned) # preprocessing
-
+transformed_input = transformed_input.reshape(batch_size, *transformed_input.shape)
 # extract embedding
 embedding = model(transformed_input)
 ```
