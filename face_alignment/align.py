@@ -8,7 +8,7 @@ from tqdm import tqdm
 import random
 from datetime import datetime
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 mtcnn_model = mtcnn.MTCNN(device=DEVICE, crop_size=(112, 112))
 
