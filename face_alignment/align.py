@@ -36,7 +36,3 @@ def get_aligned_face(image_path, rgb_pil_image=None):
         face = None
 
     return bbox, face
-
-if __name__ == "__main__":
-    bbox, face = get_aligned_face("test/test_images/Elon_Musk.jpg", rgb_pil_image=None)
-    print("bbox, face: ", bbox, face)
