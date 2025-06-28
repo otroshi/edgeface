@@ -54,8 +54,10 @@ transform = transforms.Compose([
             ])
 
 path = 'path_to_face_image'
-aligned = align.get_aligned_face(path) # align face
-transformed_input = transform(aligned) # preprocessing
+aligned_result = align.get_aligned_face(path)
+# Extract the image from the tuple (assuming the image is the second element)
+aligned_image = aligned_result[1]
+transformed_input = transform(aligned_image) # preprocessing
 transformed_input = transformed_input.reshape(batch_size, *transformed_input.shape)
 # extract embedding
 embedding = model(transformed_input)
