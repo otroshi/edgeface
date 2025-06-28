@@ -2,7 +2,7 @@ from ultralytics import YOLO
 import cv2
 import os
 import json
-from scripts import download_yolo11_face_detection
+from utils import download_yolo11_face_detection
 
 def download_yolo_model(yolo_model_path):
     # Download the YOLOv11 face detection model if it doesn't exist
