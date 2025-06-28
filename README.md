@@ -22,8 +22,14 @@ which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient F
 ![EdgeFace](assets/edgeface.png)
 
 ## Installation
-```sh
-$ pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
+**Note:** If cannot `import cv2`, run above CLI in Linux
+
+```bash
+chmod +x packages.txt
+sudo ./packages.txt
 ```
 
 ## Inference
