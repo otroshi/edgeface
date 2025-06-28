@@ -29,10 +29,14 @@ def get_aligned_face(image_path, rgb_pil_image=None):
     # find face
     try:
         bboxes, faces = mtcnn_model.align_multi(img, limit=1)
-        face = faces[0]
+        bbox, face = bboxes[0], faces[0]
     except Exception as e:
         print('Face detection Failed due to error.')
         print(e)
         face = None
 
-    return face
+    return bbox, face
+
+if __name__ == "__main__":
+    bbox, face = get_aligned_face("test/test_images/Elon_Musk.jpg", rgb_pil_image=None)
+    print("bbox, face: ", bbox, face)
