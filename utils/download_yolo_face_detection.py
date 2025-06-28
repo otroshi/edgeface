@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-def download_yolo11_face_detection_model():
+def download_yolo_face_detection_model():
     """
     Downloads the YOLOv11 face detection model from Hugging Face.
     """
@@ -25,5 +25,5 @@ def download_yolo11_face_detection_model():
         print(f"Error cloning repository: {e}")
 
 if __name__ == "__main__":
-    download_yolo11_face_detection_model()
+    download_yolo_face_detection_model()
     print("YOLOv11 face detection model download complete.")
