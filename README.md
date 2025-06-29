@@ -22,8 +22,14 @@ which is the **winning entry** in *the compact track of ["EFaR 2023: Efficient F
 ![EdgeFace](assets/edgeface.png)
 
 ## Installation
-```sh
-$ pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
+**Note:** If cannot `import cv2`, run above CLI in Linux
+
+```bash
+chmod +x packages.txt
+sudo ./packages.txt
 ```
 
 ## Inference
@@ -34,23 +40,31 @@ from torchvision import transforms
 from face_alignment import align
 from backbones import get_model
 
+batch_size = 1
 # load model
 model_name="edgeface_s_gamma_05" # or edgeface_xs_gamma_06
 model=get_model(model_name)
-checkpoint_path=f'checkpoints/{arch}.pt'
-model.load_state_dict(torch.load(checkpoint_path, map_location='cpu')).eval()
+checkpoint_path=f'checkpoints/{model_name}.pt'
+model.load_state_dict(torch.load(checkpoint_path, map_location='cpu')) # Load state dict
+model.eval() # Call eval() on the model object
 
 transform = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
             ])
 
-path = 'path_to_face_image'
-aligned = align.get_aligned_face(path) # align face
-transformed_input = transform(aligned) # preprocessing
+path = 'test/test_images/Elon_Musk.jpg'
 
-# extract embedding
+# Choose algorithm='mtcnn' or algorithm='yolo'
+aligned_result = align.get_aligned_face(path, algorithm='yolo')
+
+# Extract the image from the tuple (assuming the image is the second element)
+aligned_image = aligned_result[0][1]
+transformed_input = transform(aligned_image) # preprocessing
+transformed_input = transformed_input.reshape(batch_size, *transformed_input.shape)
+# Extract embedding
 embedding = model(transformed_input)
+print(embedding.shape)
 ```
 
 
