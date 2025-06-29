@@ -5,15 +5,18 @@ from PIL import Image
 import numpy as np
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from utils import download_yolo_face_detection
 
 def download_yolo_model(yolo_model_path):
     """Download the YOLOv11 face detection model if it doesn't exist."""
-    if not os.path.exists(yolo_model_path):
-        download_yolo_face_detection.download_yolo_face_detection_model()
-        assert os.path.exists(yolo_model_path), f"Model file {yolo_model_path} was not downloaded successfully"
+    # if not os.path.exists(yolo_model_path):
+    download_yolo_face_detection.download_yolo_face_detection_model()
+
 
 def face_yolo_detection(image_paths):
     """
@@ -31,9 +34,10 @@ def face_yolo_detection(image_paths):
     models_dir = "./checkpoints"
     yolo_model_dir = os.path.join(models_dir, "yolo11_face_detection")
     yolo_model_path = os.path.join(yolo_model_dir, "model.pt")
-    
+
     # Download model if it doesn't exist
-    download_yolo_model(yolo_model_path)
+    if not os.path.exists(yolo_model_path):
+        download_yolo_model(yolo_model_path)
 
     # Load the YOLOv11 face detection model
     model = YOLO(yolo_model_path)

@@ -8,3 +8,4 @@ __pycache__/
 dist/
 build/
 *.sqlite3
+checkpoints/yolo11_face_detection
