@@ -53,14 +53,18 @@ transform = transforms.Compose([
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
             ])
 
-path = 'path_to_face_image'
-aligned_result = align.get_aligned_face(path)
+path = 'test/test_images/Elon_Musk.jpg'
+
+# Choose algorithm='mtcnn' or algorithm='yolo'
+aligned_result = align.get_aligned_face(path, algorithm='yolo')
+
 # Extract the image from the tuple (assuming the image is the second element)
-aligned_image = aligned_result[1]
+aligned_image = aligned_result[0][1]
 transformed_input = transform(aligned_image) # preprocessing
 transformed_input = transformed_input.reshape(batch_size, *transformed_input.shape)
-# extract embedding
+# Extract embedding
 embedding = model(transformed_input)
+print(embedding.shape)
 ```
 
 
