@@ -58,22 +58,12 @@ batch_size = len(paths) if isinstance(paths, (list, tuple)) else 1
 # Align faces (assuming align.get_aligned_face returns a list of tuples)
 aligned_result = align.get_aligned_face(paths, algorithm='yolo')
 
-# Extract and transform images
-transformed_inputs = []
-for result in aligned_result:
-    aligned_image = result[1]  # Extract the image from the tuple
-    transformed_input = transform(aligned_image)  # Apply transformation
-    transformed_inputs.append(transformed_input)
-
-# Stack transformed inputs into a batch tensor
-transformed_inputs = torch.stack(transformed_inputs)  # Shape: [batch_size, C, H, W]
-
-# Ensure the input is properly shaped for the model
-transformed_inputs = transformed_inputs.reshape(batch_size, *transformed_inputs.shape[1:])
+transformed_inputs = [transform(result[1]) for result in aligned_result]
+transformed_inputs = torch.stack(transformed_inputs)
 
 # Extract embeddings
 embeddings = model(transformed_inputs)
-print(embeddings.shape)  # Expected output: torch.Size([batch_size, 512])
+print(embeddings.shape)  # Expected: torch.Size([batch_size, 512])
 ```
 
 
