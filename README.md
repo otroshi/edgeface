@@ -40,7 +40,6 @@ from torchvision import transforms
 from face_alignment import align
 from backbones import get_model
 
-batch_size = 1
 # load model
 model_name="edgeface_s_gamma_05" # or edgeface_xs_gamma_06
 model=get_model(model_name)
@@ -53,18 +52,28 @@ transform = transforms.Compose([
             transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
             ])
 
-path = 'test/test_images/Elon_Musk.jpg'
+paths = 'test/test_images/Elon_Musk.jpg'
+batch_size = len(paths) if isinstance(paths, (list, tuple)) else 1
 
-# Choose algorithm='mtcnn' or algorithm='yolo'
-aligned_result = align.get_aligned_face(path, algorithm='yolo')
+# Align faces (assuming align.get_aligned_face returns a list of tuples)
+aligned_result = align.get_aligned_face(paths, algorithm='yolo')
 
-# Extract the image from the tuple (assuming the image is the second element)
-aligned_image = aligned_result[0][1]
-transformed_input = transform(aligned_image) # preprocessing
-transformed_input = transformed_input.reshape(batch_size, *transformed_input.shape)
-# Extract embedding
-embedding = model(transformed_input)
-print(embedding.shape)
+# Extract and transform images
+transformed_inputs = []
+for result in aligned_result:
+    aligned_image = result[1]  # Extract the image from the tuple
+    transformed_input = transform(aligned_image)  # Apply transformation
+    transformed_inputs.append(transformed_input)
+
+# Stack transformed inputs into a batch tensor
+transformed_inputs = torch.stack(transformed_inputs)  # Shape: [batch_size, C, H, W]
+
+# Ensure the input is properly shaped for the model
+transformed_inputs = transformed_inputs.reshape(batch_size, *transformed_inputs.shape[1:])
+
+# Extract embeddings
+embeddings = model(transformed_inputs)
+print(embeddings.shape)  # Expected output: torch.Size([batch_size, 512])
 ```
 
 
