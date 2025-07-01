@@ -12,14 +12,14 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils import download_yolo_face_detection
 
-def initialize_yolo_model(yolo_model_path, device='cuda'):
+def initialize_yolo_model(yolo_model_path):
     """Initialize YOLO model with specified device."""
-    if device.startswith('cuda') and not torch.cuda.is_available():
-        print("Warning: CUDA not available, falling back to CPU.")
-        device = 'cpu'
+    # if device.startswith('cuda') and not torch.cuda.is_available():
+    #     print("Warning: CUDA not available, falling back to CPU.")
+    #     device = 'cpu'
     if not os.path.exists(yolo_model_path):
         download_yolo_face_detection.download_yolo_face_detection_model()
-    return YOLO(yolo_model_path, device=device)
+    return YOLO(yolo_model_path)
 
 def process_image_results(image, image_rgb, boxes):
     """Process bounding boxes and crop faces for a single image."""
@@ -34,7 +34,7 @@ def process_image_results(image, image_rgb, boxes):
                 cropped_faces.append(pil_image)
     return np.array(bounding_boxes, dtype=np.int32) if bounding_boxes else np.empty((0, 4), dtype=np.int32), cropped_faces
 
-def process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces):
+def process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces, device):
     """Process images in batch mode using list comprehensions for efficiency."""
     # Validate and load images, filter out invalid ones
     valid_data = [(cv2.imread(path), path) for path in image_paths if os.path.exists(path)]
@@ -50,7 +50,7 @@ def process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces):
     # Process valid images
     if valid_images:
         images_rgb = [cv2.cvtColor(img, cv2.COLOR_BGR2RGB) for img in valid_images]
-        results = model.predict(source=valid_image_paths, conf=0.25, iou=0.45, verbose=False)
+        results = model.predict(source=valid_image_paths, conf=0.25, iou=0.45, verbose=False, device=device)
 
         # Process results with comprehension
         for img, rgb, result in zip(valid_images, images_rgb, results):
@@ -58,7 +58,7 @@ def process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces):
             all_bounding_boxes.append(bboxes)
             all_cropped_faces.append(faces[0] if faces else [])
 
-def process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces):
+def process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces, device):
     """Process images individually."""
     for image_path in image_paths:
         if not os.path.exists(image_path):
@@ -75,7 +75,7 @@ def process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces
             continue
         
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        results = model(image_path, conf=0.25, iou=0.45, verbose=False)
+        results = model(image_path, conf=0.25, iou=0.45, verbose=False, device=device)
         
         for result in results:
             boxes = result.boxes.xyxy.cpu().numpy()
@@ -85,13 +85,13 @@ def process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces
 
 def face_yolo_detection(image_paths, yolo_model_path="./checkpoints/yolo11_face_detection/model.pt", use_batch=True, device='cuda'):
     """Perform face detection using YOLOv11 with batch or individual processing on specified device."""
-    model = initialize_yolo_model(yolo_model_path, device)
+    model = initialize_yolo_model(yolo_model_path)
     all_bounding_boxes, all_cropped_faces = [], []
     
     if use_batch:
-        process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces)
+        process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces, device)
     else:
-        process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces)
+        process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces, device)
     
     return zip(all_bounding_boxes, all_cropped_faces)
 
