@@ -6,16 +6,20 @@ import numpy as np
 import glob
 import sys
 import argparse
+import torch
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from utils import download_yolo_face_detection
 
-def initialize_yolo_model(yolo_model_path):
-    """Initialize YOLO model."""
+def initialize_yolo_model(yolo_model_path, device='cuda'):
+    """Initialize YOLO model with specified device."""
+    if device.startswith('cuda') and not torch.cuda.is_available():
+        print("Warning: CUDA not available, falling back to CPU.")
+        device = 'cpu'
     if not os.path.exists(yolo_model_path):
         download_yolo_face_detection.download_yolo_face_detection_model()
-    return YOLO(yolo_model_path)
+    return YOLO(yolo_model_path, device=device)
 
 def process_image_results(image, image_rgb, boxes):
     """Process bounding boxes and crop faces for a single image."""
@@ -52,7 +56,7 @@ def process_batch(model, image_paths, all_bounding_boxes, all_cropped_faces):
         for img, rgb, result in zip(valid_images, images_rgb, results):
             bboxes, faces = process_image_results(img, rgb, result.boxes.xyxy.cpu().numpy())
             all_bounding_boxes.append(bboxes)
-            all_cropped_faces.append(faces[0])
+            all_cropped_faces.append(faces[0] if faces else [])
 
 def process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces):
     """Process images individually."""
@@ -77,14 +81,11 @@ def process_individual(model, image_paths, all_bounding_boxes, all_cropped_faces
             boxes = result.boxes.xyxy.cpu().numpy()
             bboxes, faces = process_image_results(image, image_rgb, boxes)
             all_bounding_boxes.append(bboxes)
-            all_cropped_faces.append(faces[0])
+            all_cropped_faces.append(faces[0] if faces else [])
 
-def face_yolo_detection(image_paths,
-                        yolo_model_path="./checkpoints/yolo11_face_detection/model.pt",
-                        use_batch=True):
-    # print("os.path.abspath(yolo_model_path) ", os.path.abspath(yolo_model_path))
-    """Perform face detection using YOLOv11 with batch or individual processing."""
-    model = initialize_yolo_model(yolo_model_path)
+def face_yolo_detection(image_paths, yolo_model_path="./checkpoints/yolo11_face_detection/model.pt", use_batch=True, device='cuda'):
+    """Perform face detection using YOLOv11 with batch or individual processing on specified device."""
+    model = initialize_yolo_model(yolo_model_path, device)
     all_bounding_boxes, all_cropped_faces = [], []
     
     if use_batch:
@@ -99,12 +100,12 @@ if __name__ == "__main__":
     parser.add_argument("--use-batch", action="store_true", default=True, help="Use batch processing (default: True)")
     parser.add_argument("--image-dir", type=str, default="test/test_images", help="Input image directory")
     parser.add_argument("--yolo-model-path", type=str, default="checkpoints/yolo11_face_detection/model.pt", help="YOLO model path")
+    parser.add_argument("--device", type=str, default="cuda", help="Device to run the model (e.g., 'cuda', 'cpu', 'cuda:0')")
     
     args = parser.parse_args()
     
     image_paths = (glob.glob(os.path.join(args.image_dir, "*.[jJ][pP][gG]")) + 
-                   glob.glob(os.path.join(args.image_dir, "*.[pP][nN][gG]"))
-                )
+                   glob.glob(os.path.join(args.image_dir, "*.[pP][nN][gG]")))
     
     if args.yolo_model_path:
         yolo_model_path = args.yolo_model_path
@@ -113,9 +114,16 @@ if __name__ == "__main__":
 
     import time
     t1 = time.time()
-    all_bounding_boxes, all_cropped_faces = face_yolo_detection(yolo_model_path, image_paths, args.use_batch)
+    results = face_yolo_detection(image_paths, yolo_model_path, args.use_batch, args.device)
     print("Time taken:", time.time() - t1)
 
+    # Optional: Save or process results
+    # for i, (bboxes, faces) in enumerate(results):
+    #     print(f"Image {i}: Bounding Boxes: {bboxes}")
+    #     for j, face in enumerate(faces):
+    #         face.save(f"face_{i}_{j}.png")
+
+    # Benchmarking (uncomment to use)
     # import time
     # num_runs = 50
     # batch_times, individual_times = [], []
@@ -123,13 +131,13 @@ if __name__ == "__main__":
     # # Benchmark batch processing
     # for _ in range(num_runs):
     #     t1 = time.time()
-    #     face_yolo_detection(yolo_model_path, image_paths, use_batch=True)
+    #     face_yolo_detection(image_paths, yolo_model_path, use_batch=True, device=args.device)
     #     batch_times.append(time.time() - t1)
     
     # # Benchmark individual processing
     # for _ in range(num_runs):
     #     t1 = time.time()
-    #     face_yolo_detection(yolo_model_path, image_paths, use_batch=False)
+    #     face_yolo_detection(image_paths, yolo_model_path, use_batch=False, device=args.device)
     #     individual_times.append(time.time() - t1)
     
     # # Calculate and print average times
