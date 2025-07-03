@@ -1,13 +1,17 @@
 import sys
 import os
-
-from face_alignment import mtcnn
+import torch
+from . import mtcnn
+from .face_yolo import face_yolo_detection
 import argparse
 from PIL import Image
 from tqdm import tqdm
 import random
 from datetime import datetime
-mtcnn_model = mtcnn.MTCNN(device='cuda:0', crop_size=(112, 112))
+
+DEVICE = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+mtcnn_model = mtcnn.MTCNN(device=DEVICE, crop_size=(112, 112))
 
 def add_padding(pil_img, top, right, bottom, left, color=(0,0,0)):
     width, height = pil_img.size
@@ -17,21 +21,38 @@ def add_padding(pil_img, top, right, bottom, left, color=(0,0,0)):
     result.paste(pil_img, (left, top))
     return result
 
-def get_aligned_face(image_path, rgb_pil_image=None):
-    if rgb_pil_image is None:
-        img = Image.open(image_path).convert('RGB')
-    else:
-        assert isinstance(rgb_pil_image, Image.Image), 'Face alignment module requires PIL image or path to the image'
-        img = rgb_pil_image
-    # find face
-    try:
-        bboxes, faces = mtcnn_model.align_multi(img, limit=1)
-        face = faces[0]
-    except Exception as e:
-        print('Face detection Failed due to error.')
-        print(e)
-        face = None
+def handle_image_mtcnn(img_path, pil_img):
+        img = Image.open(img_path).convert('RGB') if pil_img is None else pil_img
+        assert isinstance(img, Image.Image), 'Face alignment requires PIL image or path'
+        try:
+            bboxes, faces = mtcnn_model.align_multi(img, limit=1)
+            return bboxes[0], faces[0]
+        except Exception as e:
+            print(f'Face detection failed: {e}')
+            return None, None
 
-    return face
+def get_aligned_face(image_path_or_image_paths, rgb_pil_image=None, algorithm='mtcnn'):
+    if algorithm=='mtcnn':
+        if isinstance(image_path_or_image_paths, list):
+            results = [handle_image_mtcnn(path, rgb_pil_image) for path in image_path_or_image_paths]
+            return results
+        elif isinstance(image_path_or_image_paths, str):
+            return [handle_image_mtcnn(image_path_or_image_paths, rgb_pil_image)]
+        else:
+            raise TypeError("image_path_or_image_paths must be a list or string") 
 
-
+    elif algorithm=='yolo':
+        if isinstance(image_path_or_image_paths, list):
+            image_paths = image_path_or_image_paths
+            results = face_yolo_detection(image_paths,
+                        # yolo_model_path="checkpoints/yolo11_face_detection/model.pt",
+                        use_batch=True, device=DEVICE)
+        elif isinstance(image_path_or_image_paths, str):
+            image_paths = [image_path_or_image_paths]
+            results = face_yolo_detection(image_paths,
+                        # yolo_model_path="checkpoints/yolo11_face_detection/model.pt",
+                        use_batch=True, device=DEVICE)
+        else:
+            raise TypeError("image_path_or_image_paths must be a list or string") 
+        results = list(results)
+    return results
